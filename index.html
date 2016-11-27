@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/JS设计模式-设计模式/" style="font-size: 10px;">JS设计模式 设计模式</a> <a href="/tags/js继承/" style="font-size: 10px;">js继承</a> <a href="/tags/node/" style="font-size: 10px;">node</a> <a href="/tags/移动端/" style="font-size: 10px;">移动端</a> <a href="/tags/解构赋值-es6/" style="font-size: 10px;">解构赋值 es6</a>
+						<a href="/tags/JS设计模式-设计模式/" style="font-size: 10px;">JS设计模式 设计模式</a> <a href="/tags/js继承/" style="font-size: 10px;">js继承</a> <a href="/tags/node/" style="font-size: 20px;">node</a> <a href="/tags/移动端/" style="font-size: 10px;">移动端</a> <a href="/tags/解构赋值-es6/" style="font-size: 10px;">解构赋值 es6</a>
 					</div>
 				</section>
 				
@@ -292,6 +292,91 @@
   
     <h1 itemprop="name">
       <a class="article-title" href="/2016/10/23/index1/">
+        node 中的一些坑
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>核心模块</p>
+<p>require</p>
+<p>node中通过require引入模块的机制为将需要的模块对应的js文件引入后执行一遍，因此在自己写的依赖模块中尽量不要无故输出信息，否则会使控制台十分混乱。</p>
+<p>fs</p>
+<p>fs模块中的所有方法在指定路径时都必须为绝对路径或是完整的相对路径（即包含../、./、/的相对路径）。</p>
+<p>fs.mkdir/mkdirSync</p>
+<p>API</p>
+<p>1<br>fs.mkdir(path, callback)<br>创建文件夹操作，支持文件夹嵌套，例如fs.mkdir(‘./a/b/c’),回调函数中的参数为Error信息，只有发生错误的时候才会存在，创建成功则为null。</p>
+<p>mkdir操作的路径如果有文件夹嵌套，则当上级路径不存在时，不能直接创建。例如当前文件夹下没有a文件夹，则fs.mkdir(‘./a/b’)不能直接创建a和a/b文件夹。</p>
+<p>fs.readFile/readFileSync</p>
+<p>读取文件操作，在使用同步方法readFileSync时函数直接返回读到的数据，如果发生错误则返回错误的信息。</p>
+<p>但是异步方法readFile在callback中的参数却是error和data，即不管是否成功第一个参数都是error，第二个参数才是读到的数据。</p>
+<p>在node中应尽量用stream来代替文件的直接读写操作。</p>
+<p>请求与响应</p>
+<p>跨域请求</p>
+<p>cors</p>
+<p>如果需要采用cors来支持跨域请求，则需要对请求头进行如下设置（完整版）<br>res.writeHead(200, {<br>    “Access-Control-Allow-Origin”: “*”,<br>    “Access-Control-Allow-Methods”: “GET, POST, PUT, DELETE, OPTIONS”,<br>    “Access-Control-Allow-Headers”: “Content-Type, accept”<br>});<br>另外，跨域时尽量对请求方法和请求路径都进行验证（RESTful），因为某些客户端框架（ionic）在发送跨域请求时，会先发送一个option方法的请求来尝试跨域请求是否成功，在成功之后才会发送原本的请求。</p>
+<p>cookie</p>
+<p>一般在node中设置cookies都会使用基于express的第三方包cookie-parser。不使用第三方包的原生写法为</p>
+<p>1<br>res.setHeader(“Set-Cookie”, […cookies])<br>其中cookies的格式为key=value; option，注意;后的空格。</p>
+<p>option的参数中max-age=time表示cookie的过期时间，其中time的为number，单位是秒。</p>
+<p>获取客户端传递的cookies的方法为</p>
+<p>1<br>req.headers.cookie<br>如果使用express和cookie-parser，则关于cookie的方法都会被集成在request和response上，设置cookie的方法为</p>
+<p>1<br>res.cookie(key, value, option)<br>注意这里的option中的max-age单位变为了毫秒，其他则没有变化。</p>
+<p>获取客户端传递的cookies的方法为</p>
+<p>req.cookies<br>获取的cookies为对象形式。</p>
+<p>IDE没有提示功能或者提示功能不全的朋友请注意上文中的cookie和cookies并背诵熟练 :)。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/">node</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-index10" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/23/index10/" class="article-date">
+  	<time datetime="2016-10-23T15:06:26.000Z" itemprop="datePublished">2016-10-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/23/index10/">
         node 中的一些坑
         
       </a>
@@ -636,6 +721,61 @@
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js继承/">js继承</a></li></ul>
 	</div>
 
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-index" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/10/25/index/" class="article-date">
+  	<time datetime="2014-10-25T10:44:51.000Z" itemprop="datePublished">2014-10-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/25/index/">
+        keep real，be myself
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="我就是我，不一样的烟火"><a href="#我就是我，不一样的烟火" class="headerlink" title="我就是我，不一样的烟火"></a>我就是我，不一样的烟火</h2><p>我是英俊潇洒、玉树临风、天下无敌、人见人爱、花见花开、气死潘安、羞死宋玉、号称一朵梨花压海棠、宇宙第一高手,人送绰号玉面小鲜肉、山崩地裂水倒流鬼见愁、美貌与智慧结合、英雄与侠义化身——Scorpio~~~~哈哈哈！</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
       
 
       
